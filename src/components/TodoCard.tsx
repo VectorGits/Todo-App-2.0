@@ -14,7 +14,7 @@ const TodoCard = () => {
 
   const [newTodo, setNewTodo] = useState("");
 
-  // Add New Todo, baby!
+  // Add A New Todo, baby!
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
     if (newTodo.trim() === "") return;
@@ -47,7 +47,7 @@ const TodoCard = () => {
         </header>
 
         {/* CARD BODY */}
-        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden my-7">
           {/* Create new TODO input */}
           <form onSubmit={addTodo} className="p-4 border-b border-gray-200 dark:border-gray-700">
             <input
