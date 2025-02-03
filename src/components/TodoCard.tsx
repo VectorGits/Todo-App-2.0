@@ -1,6 +1,7 @@
 // import React from "react"
 import React, { useState } from "react";
 import TodoList from "./TodoList";
+import DarkmodeToggle from "./DarkmodeToggle";
 
 
 const TodoCard = () => {
@@ -32,7 +33,6 @@ const TodoCard = () => {
     );
   };
 
-
   return (
       <div className="mx-auto max-w-md p-4 border">
         {/* CARD HEADER */}
@@ -41,9 +41,7 @@ const TodoCard = () => {
             TODO
           </h1>
           {/* DARK/Light Mode switcher */}
-            <button className="text-white hover:text-gray-200 transition-colors">
-              <img src="/icon-moon.svg" alt="Dark/Light Mode Switcher" className="h-6 w-6" />
-            </button>
+            <DarkmodeToggle />
         </header>
 
         {/* CARD BODY */}
