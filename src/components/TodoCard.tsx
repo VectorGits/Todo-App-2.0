@@ -65,7 +65,7 @@ const TodoCard = () => {
           {/* CARD FOOTER */}
           <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
             <span>{todos.length} items lefts</span>
-            <div className="space-x-2">
+            <div className="space-x-2 hidden md:block">
               <button className="hover:text-blue-500 dark:hover:text-blue-400">
                 All
               </button>
@@ -80,6 +80,22 @@ const TodoCard = () => {
               Clear Completed
             </button>
           </div>
+        </div>
+        <div className="px-16 py-4 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden my-7 md:hidden">
+          <div className="space-x-2 flex items-center justify-around">
+            <button className="hover:text-blue-500 dark:hover:text-blue-400">
+              All
+            </button>
+            <button className="hover:text-blue-500 dark:hover:text-blue-400">
+              Active
+            </button>
+            <button className="hover:text-blue-500 dark:hover:text-blue-400">
+              Completed
+            </button>
+          </div>
+        </div>
+        <div>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">Drag and drop to reorder list</p>
         </div>
       </div>
   );
