@@ -6,7 +6,7 @@ import DarkmodeToggle from "./DarkmodeToggle";
 
 const TodoCard = () => {
   const [todos, setTodos] = useState([
-    { id:1, text: "Complete online JavaScript course", completed: false },
+    { id: 1, text: "Complete online JavaScript course", completed: false },
     { id: 2, text: "Jog around the park 3x", completed: false },
     { id: 3, text: "10 minutes meditation", completed: false },
     { id: 4, text: "Read for 1 hour", completed: false },
@@ -32,6 +32,12 @@ const TodoCard = () => {
       )
     );
   };
+
+  const removeTodo = (id: number) => {
+    setTodos(
+      todos.filter(todo => todo.id !== id)
+    )
+  }
 
   return (
       <div className="mx-auto max-w-md p-4 border">
@@ -60,7 +66,7 @@ const TodoCard = () => {
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden">
           {/* TodoList */}
 
-          <TodoList todos={todos} toggleTodo={toggleTodo} />
+          <TodoList todos={todos} toggleTodo={toggleTodo} removeTodo={removeTodo}/>
 
           {/* CARD FOOTER */}
           <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
