@@ -57,7 +57,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, toggleTodo, removeTodo }) =>
           {/* Right side: "X" button */}
           <button
             onClick={() => removeTodo(todo.id)}
-            className="p-1 text-gray-400 hover:text-red-500 focus:outline-none"
+            className="p-1 text-gray-400 hover:text-red-500 focus:outline-none flex-shrink-0"
             aria-label="Remove Todo"
           >
             <img src="/icon-cross.svg" alt="" />
