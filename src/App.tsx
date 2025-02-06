@@ -8,11 +8,13 @@ function App() {
 
   return (
     <>
-      <div 
-        className="bg-[url('/bg-desktop-light.jpg')] 
-        dark:bg-[url('/bg-desktop-dark.jpg')] bg-auto 
-        bg-no-repeat h-screen bg-VeryLightGray dark:bg-VeryDarkBlue">
-        <TodoCard />
+      <div className="bg-VeryLightGray dark:bg-VeryDarkBlue ">
+        <div 
+          className="bg-[url('/bg-desktop-light.jpg')] 
+          dark:bg-[url('/bg-desktop-dark.jpg')] bg-auto 
+          bg-no-repeat min-h-screen">
+          <TodoCard />
+        </div>
       </div>
     </>
   )

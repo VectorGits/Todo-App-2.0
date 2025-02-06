@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import TodoList from "./TodoList";
 import DarkmodeToggle from "./DarkmodeToggle";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
 const TodoCard = () => {
   const [todos, setTodos] = useState([
@@ -35,6 +40,19 @@ const TodoCard = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  // Handle drag-and-drop reordering
+  const handleOnDragEnd = (result: DropResult) => {
+    if (!result.destination) return; // user dropped outside the list
+
+    // Make a copy of current todos
+    const items = Array.from(todos);
+    // Remove the dragged item
+    const [movedItem] = items.splice(result.source.index, 1);
+    // Insert it in the new position
+    items.splice(result.destination.index, 0, movedItem);
+    setTodos(items);
+  };
+
   // Filter the todos before passing to TodoList
   const filteredTodos = todos.filter((todo) => {
     if (filter === "active") return !todo.completed;
@@ -43,46 +61,110 @@ const TodoCard = () => {
   });
 
   return (
-    <div className="mx-auto max-w-md p-4">
-      {/* CARD HEADER */}
-      <header className="flex items-center justify-between mb-6 mt-7">
-        <h1 className="text-3xl font-bold tracking-widest text-white">TODO</h1>
-        <DarkmodeToggle />
-      </header>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div className="mx-auto max-w-md p-4">
+        {/* CARD HEADER */}
+        <header className="flex items-center justify-between mb-6 mt-7">
+          <h1 className="text-3xl font-bold tracking-widest text-white">TODO</h1>
+          <DarkmodeToggle />
+        </header>
 
-      {/* CARD BODY */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden my-7">
-        {/* Create new TODO input */}
-        <form
-          onSubmit={addTodo}
-          className="p-4 border-b border-gray-200 dark:border-gray-700"
+        {/* CARD BODY (New ToDo Input) */}
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden my-7">
+          <form
+            onSubmit={addTodo}
+            className="p-4 border-b border-gray-200 dark:border-gray-700"
+          >
+            <input
+              type="text"
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              placeholder="Create a new todo..."
+              className="w-full text-sm bg-transparent outline-none
+                         text-gray-700 dark:text-gray-200
+                         placeholder-gray-400 dark:placeholder-gray-500"
+            />
+          </form>
+        </div>
+
+        {/* WRAP TodoList + Footer in a Droppable */}
+        <Droppable droppableId="todos">
+          {(provided) => (
+            <div
+              className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {/* Pass filtered todos to TodoList (which has <Draggable> items) */}
+              <TodoList
+                todos={filteredTodos}
+                toggleTodo={toggleTodo}
+                removeTodo={removeTodo}
+              />
+
+              {/* CARD FOOTER */}
+              <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
+                <span>
+                  {todos.filter((todo) => !todo.completed).length} items left
+                </span>
+
+                {/* Desktop Filters */}
+                <div className="space-x-2 hidden md:block">
+                  <button
+                    onClick={() => setFilter("all")}
+                    className={
+                      filter === "all"
+                        ? "text-blue-500"
+                        : "hover:text-blue-500 dark:hover:text-blue-400"
+                    }
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setFilter("active")}
+                    className={
+                      filter === "active"
+                        ? "text-blue-500"
+                        : "hover:text-blue-500 dark:hover:text-blue-400"
+                    }
+                  >
+                    Active
+                  </button>
+                  <button
+                    onClick={() => setFilter("completed")}
+                    className={
+                      filter === "completed"
+                        ? "text-blue-500"
+                        : "hover:text-blue-500 dark:hover:text-blue-400"
+                    }
+                  >
+                    Completed
+                  </button>
+                </div>
+
+                <button
+                  className="hover:text-red-400 dark:hover:text-red-300"
+                  onClick={() => setTodos(todos.filter((todo) => !todo.completed))}
+                >
+                  Clear Completed
+                </button>
+              </div>
+
+              {/* IMPORTANT: placeholder for dropped item */}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+
+        {/* Mobile Filters */}
+        <div
+          className="
+            px-16 py-4 text-sm text-gray-500 dark:text-gray-400
+            bg-white dark:bg-gray-800 shadow-md
+            rounded-md overflow-hidden my-7 md:hidden
+          "
         >
-          <input
-            type="text"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            placeholder="Create a new todo..."
-            className="w-full text-sm bg-transparent outline-none
-                       text-gray-700 dark:text-gray-200
-                       placeholder-gray-400 dark:placeholder-gray-500"
-          />
-        </form>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden">
-        {/* Pass filtered todos to TodoList */}
-        <TodoList
-          todos={filteredTodos}
-          toggleTodo={toggleTodo}
-          removeTodo={removeTodo}
-        />
-
-        {/* CARD FOOTER */}
-        <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
-          <span>{todos.length} items left</span>
-
-          {/* Desktop Filters */}
-          <div className="space-x-2 hidden md:block">
+          <div className="space-x-2 flex items-center justify-around">
             <button
               onClick={() => setFilter("all")}
               className={
@@ -114,64 +196,15 @@ const TodoCard = () => {
               Completed
             </button>
           </div>
+        </div>
 
-          <button
-            className="hover:text-red-400 dark:hover:text-red-300"
-            onClick={() => setTodos(todos.filter((todo) => !todo.completed))}
-          >
-            Clear Completed
-          </button>
+        <div className="my-6">
+          <p className="text-center text-sm text-DarkGrayishBlue dark:text-LightGrayishBlue">
+            Drag and drop to reorder list
+          </p>
         </div>
       </div>
-
-      {/* Mobile Filters */}
-      <div
-        className="
-          px-16 py-4 text-sm text-gray-500 dark:text-gray-400
-          bg-white dark:bg-gray-800 shadow-md
-          rounded-md overflow-hidden my-7 md:hidden
-        "
-      >
-        <div className="space-x-2 flex items-center justify-around">
-          <button
-            onClick={() => setFilter("all")}
-            className={
-              filter === "all"
-                ? "text-blue-500"
-                : "hover:text-blue-500 dark:hover:text-blue-400"
-            }
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("active")}
-            className={
-              filter === "active"
-                ? "text-blue-500"
-                : "hover:text-blue-500 dark:hover:text-blue-400"
-            }
-          >
-            Active
-          </button>
-          <button
-            onClick={() => setFilter("completed")}
-            className={
-              filter === "completed"
-                ? "text-blue-500"
-                : "hover:text-blue-500 dark:hover:text-blue-400"
-            }
-          >
-            Completed
-          </button>
-        </div>
-      </div>
-
-      <div className="my-6">
-        <p className="text-center text-sm text-DarkGrayishBlue dark:text-LightGrayishBlue">
-          Drag and drop to reorder list
-        </p>
-      </div>
-    </div>
+    </DragDropContext>
   );
 };
 
