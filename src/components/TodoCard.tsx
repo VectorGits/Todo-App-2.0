@@ -79,7 +79,7 @@ const TodoCard = () => {
 
         {/* CARD FOOTER */}
         <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
-          <span>{todos.length} items left</span>
+          <span>{todos.filter((todo) => !todo.completed).length} items left</span>
 
           {/* Desktop Filters */}
           <div className="space-x-2 hidden md:block">
