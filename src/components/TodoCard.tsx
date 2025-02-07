@@ -11,7 +11,7 @@ const TodoCard = () => {
   const [todos, setTodos] = useState([
     { id: 1, text: "Use This Todo App", completed: true },
     { id: 2, text: "Jog around the park 3x", completed: false },
-    { id: 3, text: "Star this Repo on GitHub", completed: false },
+    { id: 3, text: "Star this Repo on", completed: false },
     { id: 4, text: "Read for 1 hour", completed: false },
     { id: 5, text: "Pick up groceries", completed: false },
   ]);
@@ -88,73 +88,76 @@ const TodoCard = () => {
         </div>
 
         {/* WRAP TodoList + Footer in a Droppable */}
-        <Droppable droppableId="todos">
-          {(provided) => (
-            <div
-              className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              {/* Pass filtered todos to TodoList (which has <Draggable> items) */}
-              <TodoList
-                todos={filteredTodos}
-                toggleTodo={toggleTodo}
-                removeTodo={removeTodo}
-              />
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden">
 
-              {/* CARD FOOTER */}
-              <div className="flex items-center justify-between p-4 text-sm text-gray-500 dark:text-gray-400">
-                <span>
-                  {todos.filter((todo) => !todo.completed).length} items left
-                </span>
+          <Droppable droppableId="todos">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {/* Pass filtered todos to TodoList (which has <Draggable> items) */}
+                <TodoList
+                  todos={filteredTodos}
+                  toggleTodo={toggleTodo}
+                  removeTodo={removeTodo}
+                />
 
-                {/* Desktop Filters */}
-                <div className="space-x-2 hidden md:block">
-                  <button
-                    onClick={() => setFilter("all")}
-                    className={
-                      filter === "all"
-                        ? "text-blue-500"
-                        : "hover:text-blue-500 dark:hover:text-blue-400"
-                    }
-                  >
-                    All
-                  </button>
-                  <button
-                    onClick={() => setFilter("active")}
-                    className={
-                      filter === "active"
-                        ? "text-blue-500"
-                        : "hover:text-blue-500 dark:hover:text-blue-400"
-                    }
-                  >
-                    Active
-                  </button>
-                  <button
-                    onClick={() => setFilter("completed")}
-                    className={
-                      filter === "completed"
-                        ? "text-blue-500"
-                        : "hover:text-blue-500 dark:hover:text-blue-400"
-                    }
-                  >
-                    Completed
-                  </button>
-                </div>
+                
 
-                <button
-                  className="hover:text-red-400 dark:hover:text-red-300"
-                  onClick={() => setTodos(todos.filter((todo) => !todo.completed))}
-                >
-                  Clear Completed
-                </button>
+                {/* IMPORTANT: placeholder for dropped item */}
+                {provided.placeholder}
               </div>
+            )}
+          </Droppable>
+          {/* CARD FOOTER */}
+          <div className="flex items-center justify-between p-4 text-sm md:border-t dark:md:border-LightGrayishBlue text-gray-500 dark:text-gray-400">
+            <span>
+              {todos.filter((todo) => !todo.completed).length} items left
+            </span>
 
-              {/* IMPORTANT: placeholder for dropped item */}
-              {provided.placeholder}
+            {/* Desktop Filters */}
+            <div className="space-x-2 hidden md:block">
+              <button
+                onClick={() => setFilter("all")}
+                className={
+                  filter === "all"
+                    ? "text-blue-500"
+                    : "hover:text-blue-500 dark:hover:text-blue-400"
+                }
+              >
+                All
+              </button>
+              <button
+                onClick={() => setFilter("active")}
+                className={
+                  filter === "active"
+                    ? "text-blue-500"
+                    : "hover:text-blue-500 dark:hover:text-blue-400"
+                }
+              >
+                Active
+              </button>
+              <button
+                onClick={() => setFilter("completed")}
+                className={
+                  filter === "completed"
+                    ? "text-blue-500"
+                    : "hover:text-blue-500 dark:hover:text-blue-400"
+                }
+              >
+                Completed
+              </button>
             </div>
-          )}
-        </Droppable>
+
+            <button
+              className="hover:text-red-400 dark:hover:text-red-300"
+              onClick={() => setTodos(todos.filter((todo) => !todo.completed))}
+            >
+              Clear Completed
+            </button>
+          </div>
+        </div>
 
         {/* Mobile Filters */}
         <div
