@@ -11,7 +11,7 @@ const TodoCard = () => {
   const [todos, setTodos] = useState([
     { id: 1, text: "Use This Todo App", completed: true },
     { id: 2, text: "Jog around the park 3x", completed: false },
-    { id: 3, text: "Star this Repo on", completed: false },
+    { id: 3, text: "Star this Repo on Github", completed: false },
     { id: 4, text: "Read for 1 hour", completed: false },
     { id: 5, text: "Pick up groceries", completed: false },
   ]);
